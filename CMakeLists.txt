@@ -3,8 +3,7 @@ project(alg-lib)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-#52eb8108c5bdec04579160ae17225d66034bd723
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -19,7 +18,7 @@ enable_testing()
 
 file(GLOB_RECURSE ut-src Tests/*.cc)
 add_executable(
-  alg-lib-ut 
+  alg-lib-ut
   ${ut-src}
 )
 target_include_directories(
@@ -38,4 +37,3 @@ gtest_discover_tests(alg-lib-ut
   DISCOVERY_MODE PRE_TEST
 )
 set(CTEST_OUTPUT_ON_FAILURE ON)
-
