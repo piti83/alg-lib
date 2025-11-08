@@ -32,5 +32,10 @@ target_link_libraries(
 )
 
 include(GoogleTest)
-gtest_discover_tests(alg-lib-ut)
+
+gtest_discover_tests(alg-lib-ut
+  PROPERTIES LABELS "unit"
+  DISCOVERY_MODE PRE_TEST
+)
+set(CTEST_OUTPUT_ON_FAILURE ON)
 

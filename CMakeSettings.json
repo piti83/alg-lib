@@ -31,10 +31,9 @@
       "cmakeExecutable": "cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": "",
+      "ctestCommandArgs": "-V --output-on-failure",
       "inheritEnvironments": [ "linux_x64" ],
-      "wslPath": "Ubuntu",
-      "variables": []
+      "wslPath": "Ubuntu"
     },
     {
       "name": "WSL-GCC-Release",
@@ -45,10 +44,9 @@
       "cmakeExecutable": "cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": "",
+      "ctestCommandArgs": "-V --output-on-failure",
       "inheritEnvironments": [ "linux_x64" ],
-      "wslPath": "Ubuntu",
-      "variables": []
+      "wslPath": "Ubuntu"
     }
   ]
 }
