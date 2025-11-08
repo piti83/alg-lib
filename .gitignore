@@ -43,3 +43,4 @@
 *.filters
 
 /out
+/__cmake_systeminformation
