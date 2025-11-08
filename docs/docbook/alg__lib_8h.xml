@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="_alg__lib_8h" xml:lang="en-US">
-<title>Include/alg_lib.h File Reference</title>
-<indexterm><primary>Include/alg_lib.h</primary></indexterm>
-<programlisting linenumbering="unnumbered">#include &quot;singly_linked_list.h&quot;<?linebreak?>#include &quot;doubly_linked_list.h&quot;<?linebreak?>#include &quot;constants.h&quot;<?linebreak?>#include &quot;array_stack.h&quot;<?linebreak?>#include &quot;sll_stack.h&quot;<?linebreak?>#include &quot;circular_queue.h&quot;<?linebreak?>#include &quot;sll_queue.h&quot;<?linebreak?>#include &quot;adj_mat_graph.h&quot;<?linebreak?>#include &quot;vector.h&quot;<?linebreak?></programlisting></section>

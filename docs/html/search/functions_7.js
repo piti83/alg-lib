@@ -1,9 +1,0 @@
-var searchData=
-[
-  ['insert_0',['Insert',['../classalglib_1_1_vector.html#a1126576feed3e3049d61eba5d416299d',1,'alglib::Vector']]],
-  ['insertatbeginning_1',['InsertAtBeginning',['../classalglib_1_1_doubly_linked_list.html#ae5c4984f3b543255d77bc7dff712dae2',1,'alglib::DoublyLinkedList::InsertAtBeginning()'],['../classalglib_1_1_singly_linked_list.html#a3086ae26d59dd8757425442fbf567a80',1,'alglib::SinglyLinkedList::InsertAtBeginning()']]],
-  ['insertatend_2',['InsertAtEnd',['../classalglib_1_1_doubly_linked_list.html#a618478f1d0ddb6983e6a5328393aaa40',1,'alglib::DoublyLinkedList::InsertAtEnd()'],['../classalglib_1_1_singly_linked_list.html#ac0c0c71d9dc7467c259da8a7c7ef9f75',1,'alglib::SinglyLinkedList::InsertAtEnd()']]],
-  ['insertatposition_3',['InsertAtPosition',['../classalglib_1_1_doubly_linked_list.html#a13a231a242c15a554be2b8036da309d8',1,'alglib::DoublyLinkedList::InsertAtPosition()'],['../classalglib_1_1_singly_linked_list.html#abc385633efce02bace4b422daf682725',1,'alglib::SinglyLinkedList::InsertAtPosition()']]],
-  ['isempty_4',['IsEmpty',['../classalglib_1_1_array_stack.html#a4641ea8602ea52567fae4e0ef2baf543',1,'alglib::ArrayStack::IsEmpty()'],['../classalglib_1_1_circular_queue.html#a58ec08c9d85e6bec314d4ff3029cdb47',1,'alglib::CircularQueue::IsEmpty()'],['../classalglib_1_1_doubly_linked_list.html#a591a79bc036bebea7c7f82b5e46719f7',1,'alglib::DoublyLinkedList::IsEmpty()'],['../classalglib_1_1_s_l_l_queue.html#a71f6c7dd358bc4b9559abed01d2eeb81',1,'alglib::SLLQueue::IsEmpty()'],['../classalglib_1_1_s_l_l_stack.html#a6ff1ce19b121db87a473a80df378a861',1,'alglib::SLLStack::IsEmpty()']]],
-  ['isfull_5',['IsFull',['../classalglib_1_1_array_stack.html#a29b20842d905cb7930db87f3b88eb9d3',1,'alglib::ArrayStack::IsFull()'],['../classalglib_1_1_circular_queue.html#a8338ef10126aaf2ebba8fc45fb1c20ac',1,'alglib::CircularQueue::IsFull()']]]
-];
