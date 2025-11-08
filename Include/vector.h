@@ -42,17 +42,17 @@
 /// </summary>
 namespace alglib {
 
-template <typename VectorType>
-class VectorIter {
+template <typename VectorType> class VectorIter {
 public:
-  // TODO: add definitions for operators and constructors. 
-  VectorType& operator*();
-  VectorType& operator++();
+  // TODO: add definitions for operators and constructors.
+  VectorType &operator*();
+  VectorType &operator++();
   VectorType operator++(VectorType);
-  bool operator!=(const VectorIter&);
-  bool operator==(const VectorIter&);
+  bool operator!=(const VectorIter &);
+  bool operator==(const VectorIter &);
+
 private:
-  VectorType* _ptr;
+  VectorType *_ptr;
 };
 
 /// <summary>
@@ -61,26 +61,21 @@ private:
 /// doubles every time the size exceeds current capacity.
 /// </summary>
 /// <typeparam name="T"> type of data stored in vector.</typeparam>
-template <typename T>
-class Vector {
- public:
-
-
-
- public:
+template <typename T> class Vector {
+public:
   // Constructors for vector class;
   Vector() noexcept;
   Vector(size_t elements) noexcept;
-  Vector(size_t elements, const T& value) noexcept;
+  Vector(size_t elements, const T &value) noexcept;
 
   // Inserting and removing elements from the vector.
-  void Push(const T& value) noexcept;
-  void Insert(const T& value, size_t index);
-  T& Pop();
+  void Push(const T &value) noexcept;
+  void Insert(const T &value, size_t index);
+  T &Pop();
 
   // Accessing elements in the vector.
-  T& At(size_t index);
-  const T& At(size_t index) const;
+  T &At(size_t index);
+  const T &At(size_t index) const;
 
   // Getting size and capacity of the vector.
   size_t Size() const noexcept;
@@ -91,15 +86,15 @@ class Vector {
   void ShrinkToFit();
 
   // Getting first and last element of the vector.
-  T& Front();
-  const T& Front() const;
-  T& Back();
-  const T& Back() const;
+  T &Front();
+  const T &Front() const;
+  T &Back();
+  const T &Back() const;
 
   // Destructor for the vector class.
   ~Vector() noexcept;
 
- private:
+private:
   // Method that reallocates memory for the vector.
   void Reallocate(size_t amount);
 
@@ -115,11 +110,10 @@ class Vector {
   /// <summary>
   /// Array that holds the data of the vector.
   /// </summary>
-  T* data;
+  T *data;
 };
 
-template <typename VectorType>
-VectorType& VectorIter<VectorType>::operator*() {
+template <typename VectorType> VectorType &VectorIter<VectorType>::operator*() {
   return *_ptr;
 }
 
@@ -148,11 +142,11 @@ Vector<T>::Vector(size_t elements) noexcept
 /// given value. All elements will be set to the given value.
 /// </summary>
 /// <param name="elements"> amount of elements that will be initially
-/// allocated. </param> 
+/// allocated. </param>
 /// <param name="value"> value that all the elements will be
 /// initialised to.</param>
 template <typename T>
-Vector<T>::Vector(size_t elements, const T& value) noexcept
+Vector<T>::Vector(size_t elements, const T &value) noexcept
     : size(0), capacity(0), data(nullptr) {
   Reallocate(elements);
   for (size_t i{}; i < capacity; ++i) {
@@ -165,8 +159,7 @@ Vector<T>::Vector(size_t elements, const T& value) noexcept
 /// capacity, the capacity is doubled.
 /// </summary>
 /// <param name="value"> value to be added.</param>
-template <typename T>
-void Vector<T>::Push(const T& value) noexcept {
+template <typename T> void Vector<T>::Push(const T &value) noexcept {
   if (size >= capacity) {
     Reallocate(capacity * 2);
   }
@@ -180,8 +173,7 @@ void Vector<T>::Push(const T& value) noexcept {
 /// </summary>
 /// <param name="value"> value to be inserted.</param>
 /// <param name="index"> inserting position.</param>
-template <typename T>
-void Vector<T>::Insert(const T& value, size_t index) {
+template <typename T> void Vector<T>::Insert(const T &value, size_t index) {
   if (index > size) {
     throw std::runtime_error(errors::kIndexOutOfRange);
   }
@@ -200,10 +192,7 @@ void Vector<T>::Insert(const T& value, size_t index) {
 /// decrementing the size.
 /// </summary>
 /// <returns> last element of the vector.</returns>
-template <typename T>
-T& Vector<T>::Pop() {
-  return data[size--];
-}
+template <typename T> T &Vector<T>::Pop() { return data[size--]; }
 
 /// <summary>
 /// Returns the element at a given index. If the index is out of range, an
@@ -211,8 +200,7 @@ T& Vector<T>::Pop() {
 /// </summary>
 /// <param name="index"> index of element to return.</param>
 /// <returns> element at a given index.</returns>
-template <typename T>
-T& Vector<T>::At(size_t index) {
+template <typename T> T &Vector<T>::At(size_t index) {
   if (index >= size) {
     throw std::runtime_error(errors::kIndexOutOfRange);
   }
@@ -225,8 +213,7 @@ T& Vector<T>::At(size_t index) {
 /// </summary>
 /// <param name="index"> index of element to return.</param>
 /// <returns> element at a given index.</returns>
-template <typename T>
-const T& Vector<T>::At(size_t index) const {
+template <typename T> const T &Vector<T>::At(size_t index) const {
   if (index >= size) {
     throw std::runtime_error(errors::kIndexOutOfRange);
   }
@@ -237,17 +224,13 @@ const T& Vector<T>::At(size_t index) const {
 /// Return amount of elements in the vector.
 /// </summary>
 /// <returns> amount of elements in the vector.</returns>
-template <typename T>
-size_t Vector<T>::Size() const noexcept {
-  return size;
-}
+template <typename T> size_t Vector<T>::Size() const noexcept { return size; }
 
 /// <summary>
 /// Returns current maximum capacity of the vector.
 /// </summary>
 /// <returns> current maximum capacity of the vector.</returns>
-template <typename T>
-size_t Vector<T>::Capacity() const noexcept {
+template <typename T> size_t Vector<T>::Capacity() const noexcept {
   return capacity;
 }
 
@@ -257,63 +240,44 @@ size_t Vector<T>::Capacity() const noexcept {
 /// size, the vector is extended.
 /// </summary>
 /// <param name="size"> new size.</param>
-template <typename T>
-void Vector<T>::Resize(size_t size) {
-  Reallocate(size);
-}
+template <typename T> void Vector<T>::Resize(size_t size) { Reallocate(size); }
 
 /// <summary>
-/// Shrinks the capacity of the vector to the current size by 
+/// Shrinks the capacity of the vector to the current size by
 /// reallocating memory with the size of the vector.
 /// </summary>
-template <typename T>
-void Vector<T>::ShrinkToFit() {
-  Reallocate(size);
-}
+template <typename T> void Vector<T>::ShrinkToFit() { Reallocate(size); }
 
 /// <summary>
 /// Returns the first element of the vector.
 /// </summary>
 /// <returns> first element of the vector.</returns>
-template <typename T>
-T& Vector<T>::Front() {
-  return data[0];
-}
+template <typename T> T &Vector<T>::Front() { return data[0]; }
 
 /// <summary>
 /// Returns the first element of the vector.
 /// </summary>
 /// <returns> first element of the vector.</returns>
-template <typename T>
-const T& Vector<T>::Front() const {
-  return data[0];
-}
+template <typename T> const T &Vector<T>::Front() const { return data[0]; }
 
 /// <summary>
 /// Returns the last element of the vector.
 /// </summary>
 /// <returns> last element of the vector.</returns>
-template <typename T>
-T& Vector<T>::Back() {
-  return data[size - 1];
-}
+template <typename T> T &Vector<T>::Back() { return data[size - 1]; }
 
 /// <summary>
 /// Returns the last element of the vector.
 /// </summary>
 /// <returns> last element of the vector.</returns>
-template <typename T>
-const T& Vector<T>::Back() const {
+template <typename T> const T &Vector<T>::Back() const {
   return data[size - 1];
 }
 
 /// <summary>
 /// Deletes the vector and deallocates memory.
 /// </summary>
-template <typename T>
-Vector<T>::~Vector() noexcept {
-  delete[] data;
-}
+template <typename T> Vector<T>::~Vector() noexcept { delete[] data; }
 
 /// <summary>
 /// Reallocates memory for the vector. It copies all the elements from the old
@@ -321,9 +285,8 @@ Vector<T>::~Vector() noexcept {
 /// size, the size is truncated.
 /// </summary>
 /// <param name="amount"> new amount of elements.</param>
-template <typename T>
-void Vector<T>::Reallocate(size_t amount) {
-  T* new_data{new T[amount]};
+template <typename T> void Vector<T>::Reallocate(size_t amount) {
+  T *new_data{new T[amount]};
   size = (amount < size) ? amount : size;
   for (size_t i{}; i < size; ++i) {
     new_data[i] = data[i];
@@ -332,6 +295,6 @@ void Vector<T>::Reallocate(size_t amount) {
   data = new_data;
   capacity = amount;
 }
-}  // namespace alglib
+} // namespace alglib
 
-#endif  // ALGLIB_INCLUDE_VECTOR_H_
+#endif // ALGLIB_INCLUDE_VECTOR_H_

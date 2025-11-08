@@ -30,8 +30,17 @@ $LogFileWin = Join-Path $LogDirWin "wsl-$Cfg-$RunId$Suffix.txt"
 
 $RepoWsl    = To-WslPath $RepoWin
 $LogFileWsl = To-WslPath $LogFileWin
-$LogDirWsl  = To-WslPath $LogDirWin
 $BldWsl     = "$RepoWsl/out/build/wsl-$Cfg"
+$LogDirWsl  = To-WslPath $LogDirWin
 
 wsl.exe bash -lc "mkdir -p '$LogDirWsl'"
-wsl.exe bash -lc "export GTEST_COLOR=1; ctest --test-dir '$BldWsl' -V --output-on-failure | tee '$LogFileWsl'"
+wsl.exe bash -lc "export GTEST_COLOR=1; ctest --test-dir '$BldWsl' -V --output-on-failure >'$LogFileWsl' 2>&1"
+$code = $LASTEXITCODE
+wsl.exe bash -lc "grep -E '^[[:space:]]*[0-9]+% tests passed|^100% tests passed|^The following tests FAILED:' '$LogFileWsl' || true"
+if ($code -eq 0) {
+  Write-Host "WSL $($Cfg): ALL TESTS PASSED" -ForegroundColor Green
+} else {
+  Write-Host "WSL $($Cfg): SOME TESTS FAILED — CHECK LOG:" -ForegroundColor Red
+}
+Write-Host "Log: $LogFileWsl"
+exit $code

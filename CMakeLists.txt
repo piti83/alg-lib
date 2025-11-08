@@ -17,16 +17,22 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 file(GLOB_RECURSE ut-src Tests/*.cc)
+
 add_executable(
   alg-lib-ut
   ${ut-src}
 )
+
+add_library(alg-lib INTERFACE)
+target_include_directories(alg-lib INTERFACE ${CMAKE_SOURCE_DIR}/Include)
+
 target_include_directories(
   alg-lib-ut PUBLIC
-  Include/
+  ${CMAKE_SOURCE_DIR}/Include/
 )
 target_link_libraries(
-  alg-lib-ut PUBLIC
+  alg-lib-ut PRIVATE
+  alg-lib
   GTest::gtest_main
 )
 

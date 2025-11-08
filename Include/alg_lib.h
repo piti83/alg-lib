@@ -31,14 +31,13 @@
 #ifndef ALGLIB_INCLUDE_ALGLIB_H_
 #define ALGLIB_INCLUDE_ALGLIB_H_
 
-#include "singly_linked_list.h"
-#include "doubly_linked_list.h"
-#include "constants.h"
 #include "array_stack.h"
-#include "sll_stack.h"
 #include "circular_queue.h"
+#include "constants.h"
+#include "doubly_linked_list.h"
+#include "singly_linked_list.h"
 #include "sll_queue.h"
-#include "adj_mat_graph.h"
+#include "sll_stack.h"
 #include "vector.h"
 
 #endif // ALGLIB_INCLUDE_ALGLIB_H_

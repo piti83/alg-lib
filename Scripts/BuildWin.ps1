@@ -9,5 +9,5 @@ if ($Cfg -eq 'All') {
 }
 
 $Bld = Join-Path $Repo "out/build/win-$Cfg"
-cmake -S $Repo -B $Bld -G "Visual Studio 17 2022" -A x64
+cmake -S $Repo -B $Bld -G "Visual Studio 17 2022" -A x64 -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 cmake --build $Bld --config $Cfg -j
