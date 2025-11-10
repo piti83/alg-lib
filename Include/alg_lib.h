@@ -1,10 +1,10 @@
 //*****************************************************************************
 // The MIT License (MIT)
 //
-// Copyright © 2024 Piotr Walczak
+// Copyright ï¿½ 2024 Piotr Walczak
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the “Software”), to
+// of this software and associated documentation files (the ï¿½Softwareï¿½), to
 // deal in the Software without restriction, including without limitation the
 // rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
 // sell copies of the Software, and to permit persons to whom the Software is
@@ -13,7 +13,7 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 //
-// THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// THE SOFTWARE IS PROVIDED ï¿½AS ISï¿½, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 // THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -23,7 +23,7 @@
 //*****************************************************************************
 
 //*****************************************************************************
-// File: array_stack.h
+// File alg_lib.h
 //
 // This file imports whole library at once for easier use.
 //*****************************************************************************
@@ -31,14 +31,13 @@
 #ifndef ALGLIB_INCLUDE_ALGLIB_H_
 #define ALGLIB_INCLUDE_ALGLIB_H_
 
-#include "singly_linked_list.h"
-#include "doubly_linked_list.h"
-#include "constants.h"
 #include "array_stack.h"
-#include "sll_stack.h"
 #include "circular_queue.h"
+#include "constants.h"
+#include "doubly_linked_list.h"
+#include "singly_linked_list.h"
 #include "sll_queue.h"
-#include "adj_mat_graph.h"
+#include "sll_stack.h"
 #include "vector.h"
 
 #endif // ALGLIB_INCLUDE_ALGLIB_H_

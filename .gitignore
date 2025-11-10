@@ -41,3 +41,8 @@
 *.user
 *.vcxproj
 *.filters
+
+/out
+/__cmake_systeminformation
+/.zed
+/.cache

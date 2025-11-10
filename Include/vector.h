@@ -1,10 +1,10 @@
 //*****************************************************************************
 // The MIT License (MIT)
 //
-// Copyright © 2024 Piotr Walczak
+// Copyright ï¿½ 2024 Piotr Walczak
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the “Software”), to
+// of this software and associated documentation files (the ï¿½Softwareï¿½), to
 // deal in the Software without restriction, including without limitation the
 // rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
 // sell copies of the Software, and to permit persons to whom the Software is
@@ -13,7 +13,7 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 //
-// THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// THE SOFTWARE IS PROVIDED ï¿½AS ISï¿½, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 // THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -35,6 +35,8 @@
 #ifndef ALGLIB_INCLUDE_VECTOR_H_
 #define ALGLIB_INCLUDE_VECTOR_H_
 
+#include <stdexcept>
+
 #include "constants.h"
 
 /// <summary>
@@ -42,28 +44,46 @@
 /// </summary>
 namespace alglib {
 
+// Declarations for Vector class. Implementations under vector class.
+template <typename VectorType> class VectorIter;
+template <typename VectorType> class ConstVectorIter;
+template <typename VectorType> class ReverseVectorIter;
+template <typename VectorType> class ConstReverseVectorIter;
+
 /// <summary>
 /// Template based vector implementation that uses an array as a base structure.
 /// It allocates memory on the heap, and it can grow dynamically. Capacity
 /// doubles every time the size exceeds current capacity.
 /// </summary>
 /// <typeparam name="T"> type of data stored in vector.</typeparam>
-template <typename T>
-class Vector {
- public:
+template <typename T> class Vector {
+public:
+  using Iterator = VectorIter<T>;
+  using IteratorRef = VectorIter<T> &;
+
+  using ConstIterator = ConstVectorIter<T>;
+  using ConstIteratorRef = ConstVectorIter<T> &;
+
+  using ReverseIterator = ReverseVectorIter<T>;
+  using ReverseIteratorRef = ReverseVectorIter<T> &;
+
+  using ConstReverseIterator = ConstReverseVectorIter<T>;
+  using ConstReverseIteratorRef = ConstReverseVectorIter<T> &;
+
+public:
   // Constructors for vector class;
   Vector() noexcept;
   Vector(size_t elements) noexcept;
-  Vector(size_t elements, const T& value) noexcept;
+  Vector(size_t elements, const T &value) noexcept;
 
   // Inserting and removing elements from the vector.
-  void Push(const T& value) noexcept;
-  void Insert(const T& value, size_t index);
-  T& Pop();
+  void Push(const T &value) noexcept;
+  void Insert(const T &value, size_t index);
+  T Pop();
 
   // Accessing elements in the vector.
-  T& At(size_t index);
-  const T& At(size_t index) const;
+  T &At(size_t index);
+  const T &At(size_t index) const;
 
   // Getting size and capacity of the vector.
   size_t Size() const noexcept;
@@ -74,15 +94,32 @@ class Vector {
   void ShrinkToFit();
 
   // Getting first and last element of the vector.
-  T& Front();
-  const T& Front() const;
-  T& Back();
-  const T& Back() const;
+  T &Front();
+  const T &Front() const;
+  T &Back();
+  const T &Back() const;
 
-  // Destructor for the vector class.
+  // Iterators
+  Iterator begin();
+  Iterator end();
+  ConstIterator cbegin();
+  ConstIterator cend();
+  ReverseIterator rbegin();
+  ReverseIterator rend();
+  ConstReverseIterator crbegin();
+  ConstReverseIterator crend();
+  Iterator Begin();
+  Iterator End();
+  ConstIterator ConstBegin();
+  ConstIterator ConstEnd();
+  ReverseIterator ReverseBegin();
+  ReverseIterator ReverseEnd();
+  ConstReverseIterator ConstReverseBegin();
+  ConstReverseIterator ConstReverseEnd();
+
   ~Vector() noexcept;
 
- private:
+private:
   // Method that reallocates memory for the vector.
   void Reallocate(size_t amount);
 
@@ -98,8 +135,302 @@ class Vector {
   /// <summary>
   /// Array that holds the data of the vector.
   /// </summary>
-  T* data;
+  T *data;
 };
+
+/// <summary>
+/// Iterator for alg-lib's vector. Makes it possible to use for-each style loop.
+/// </summary>
+/// <typeparam name="T"> type of data stored in vector.</typeparam>
+template <typename VectorType> class VectorIter {
+public:
+  VectorIter(VectorType *element_address);
+
+  // Operator overloads
+  VectorType &operator*();
+  VectorIter &operator++();
+  VectorIter operator++(VectorType placeholder);
+  bool operator!=(const VectorIter &other);
+  bool operator==(const VectorIter &other);
+
+private:
+  /// <summary>
+  /// Pointer to a specific element of vector
+  /// </summary>
+  VectorType *_ptr;
+};
+
+/// <summary>
+/// Iterator for alg-lib's vector. Returns constants to disable possibility of
+/// modifying vector contents through it.
+/// </summary>
+/// <typeparam name="T"> type of data stored in vector.</typeparam>
+template <typename VectorType> class ConstVectorIter {
+public:
+  ConstVectorIter(VectorType *element_address);
+
+  // Operator overloads
+  const VectorType &operator*() const;
+  ConstVectorIter &operator++();
+  ConstVectorIter operator++(VectorType placeholder);
+  bool operator!=(const ConstVectorIter &other) const;
+  bool operator==(const ConstVectorIter &other) const;
+
+private:
+  /// <summary>
+  /// Pointer to a specific element of vector
+  /// </summary>
+  const VectorType *_ptr;
+};
+
+template <typename VectorType> class ReverseVectorIter {
+public:
+  ReverseVectorIter(VectorType *element_address);
+
+  // Operator overloads
+  VectorType &operator*();
+  ReverseVectorIter &operator++();
+  ReverseVectorIter operator++(VectorType placeholder);
+  bool operator!=(const ReverseVectorIter &other);
+  bool operator==(const ReverseVectorIter &other);
+
+private:
+  /// <summary>
+  /// Pointer to a specific element of vector
+  /// </summary>
+  VectorType *_ptr;
+};
+
+template <typename VectorType> class ConstReverseVectorIter {
+public:
+  ConstReverseVectorIter(VectorType *element_address);
+
+  // Operator overloads
+  const VectorType &operator*() const;
+  ConstReverseVectorIter &operator++();
+  ConstReverseVectorIter operator++(VectorType placeholder);
+  bool operator!=(const ConstReverseVectorIter &other) const;
+  bool operator==(const ConstReverseVectorIter &other) const;
+
+private:
+  /// <summary>
+  /// Pointer to a specific element of vector
+  /// </summary>
+  const VectorType *_ptr;
+};
+
+/// <summary>
+/// Constructor initialising the that iterator points to to argument value;
+/// </summary>
+template <typename VectorType>
+VectorIter<VectorType>::VectorIter(VectorType *element_address) {
+  _ptr = element_address;
+}
+
+/// <summary>
+/// Dereferences held pointer to get the value of vector element.
+/// </summary>
+template <typename VectorType> VectorType &VectorIter<VectorType>::operator*() {
+  return *_ptr;
+}
+
+/// <summary>
+/// Pre-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+VectorIter<VectorType> &VectorIter<VectorType>::operator++() {
+  ++_ptr;
+  return *this;
+}
+
+/// <summary>
+/// Post-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+VectorIter<VectorType>
+VectorIter<VectorType>::operator++(VectorType placeholder) {
+  VectorIter<VectorType> tmp = *this;
+  ++(this->_ptr);
+  return tmp;
+}
+
+/// <summary>
+/// Checks inequality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool VectorIter<VectorType>::operator!=(const VectorIter &other) {
+  return this->_ptr != other._ptr;
+}
+
+/// <summary>
+/// Checks equality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool VectorIter<VectorType>::operator==(const VectorIter &other) {
+  return this->_ptr == other._ptr;
+}
+
+/// <summary>
+/// Constructor initialising the that iterator points to to argument value;
+/// </summary>
+template <typename VectorType>
+ConstVectorIter<VectorType>::ConstVectorIter(VectorType *element_address) {
+  _ptr = element_address;
+}
+
+/// <summary>
+/// Dereferences held pointer to get the value of vector element.
+/// </summary>
+template <typename VectorType>
+const VectorType &ConstVectorIter<VectorType>::operator*() const {
+  return *_ptr;
+}
+
+/// <summary>
+/// Pre-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ConstVectorIter<VectorType> &ConstVectorIter<VectorType>::operator++() {
+  ++_ptr;
+  return *this;
+}
+
+/// <summary>
+/// Post-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ConstVectorIter<VectorType>
+ConstVectorIter<VectorType>::operator++(VectorType placeholder) {
+  ConstVectorIter<VectorType> tmp = *this;
+  ++(this->_ptr);
+  return tmp;
+}
+
+/// <summary>
+/// Checks inequality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ConstVectorIter<VectorType>::operator!=(
+    const ConstVectorIter &other) const {
+  return this->_ptr != other._ptr;
+}
+
+/// <summary>
+/// Checks equality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ConstVectorIter<VectorType>::operator==(
+    const ConstVectorIter &other) const {
+  return this->_ptr == other._ptr;
+}
+
+/// <summary>
+/// Constructor initialising the that iterator points to to argument value;
+/// </summary>
+template <typename VectorType>
+ReverseVectorIter<VectorType>::ReverseVectorIter(VectorType *element_address) {
+  _ptr = element_address;
+}
+
+/// <summary>
+/// Dereferences held pointer to get the value of vector element.
+/// </summary>
+template <typename VectorType>
+VectorType &ReverseVectorIter<VectorType>::operator*() {
+  return *_ptr;
+}
+
+/// <summary>
+/// Pre-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ReverseVectorIter<VectorType> &ReverseVectorIter<VectorType>::operator++() {
+  --_ptr;
+  return *this;
+}
+
+/// <summary>
+/// Post-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ReverseVectorIter<VectorType>
+ReverseVectorIter<VectorType>::operator++(VectorType placeholder) {
+  ReverseVectorIter<VectorType> tmp = *this;
+  --(this->_ptr);
+  return tmp;
+}
+
+/// <summary>
+/// Checks inequality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ReverseVectorIter<VectorType>::operator!=(const ReverseVectorIter &other) {
+  return this->_ptr != other._ptr;
+}
+
+/// <summary>
+/// Checks equality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ReverseVectorIter<VectorType>::operator==(const ReverseVectorIter &other) {
+  return this->_ptr == other._ptr;
+}
+
+/// <summary>
+/// Constructor initialising the that iterator points to to argument value;
+/// </summary>
+template <typename VectorType>
+ConstReverseVectorIter<VectorType>::ConstReverseVectorIter(
+    VectorType *element_address) {
+  _ptr = element_address;
+}
+
+/// <summary>
+/// Dereferences held pointer to get the value of vector element.
+/// </summary>
+template <typename VectorType>
+const VectorType &ConstReverseVectorIter<VectorType>::operator*() const {
+  return *_ptr;
+}
+
+/// <summary>
+/// Pre-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ConstReverseVectorIter<VectorType> &
+ConstReverseVectorIter<VectorType>::operator++() {
+  --_ptr;
+  return *this;
+}
+
+/// <summary>
+/// Post-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ConstReverseVectorIter<VectorType>
+ConstReverseVectorIter<VectorType>::operator++(VectorType placeholder) {
+  ConstReverseVectorIter<VectorType> tmp = *this;
+  --(this->_ptr);
+  return tmp;
+}
+
+/// <summary>
+/// Checks inequality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ConstReverseVectorIter<VectorType>::operator!=(
+    const ConstReverseVectorIter &other) const {
+  return this->_ptr != other._ptr;
+}
+
+/// <summary>
+/// Checks equality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ConstReverseVectorIter<VectorType>::operator==(
+    const ConstReverseVectorIter &other) const {
+  return this->_ptr == other._ptr;
+}
 
 /// <summary>
 /// No argument constructor for the vector class. It initializes the vector with
@@ -126,11 +457,11 @@ Vector<T>::Vector(size_t elements) noexcept
 /// given value. All elements will be set to the given value.
 /// </summary>
 /// <param name="elements"> amount of elements that will be initially
-/// allocated. </param> 
+/// allocated. </param>
 /// <param name="value"> value that all the elements will be
 /// initialised to.</param>
 template <typename T>
-Vector<T>::Vector(size_t elements, const T& value) noexcept
+Vector<T>::Vector(size_t elements, const T &value) noexcept
     : size(0), capacity(0), data(nullptr) {
   Reallocate(elements);
   for (size_t i{}; i < capacity; ++i) {
@@ -143,8 +474,7 @@ Vector<T>::Vector(size_t elements, const T& value) noexcept
 /// capacity, the capacity is doubled.
 /// </summary>
 /// <param name="value"> value to be added.</param>
-template <typename T>
-void Vector<T>::Push(const T& value) noexcept {
+template <typename T> void Vector<T>::Push(const T &value) noexcept {
   if (size >= capacity) {
     Reallocate(capacity * 2);
   }
@@ -158,8 +488,7 @@ void Vector<T>::Push(const T& value) noexcept {
 /// </summary>
 /// <param name="value"> value to be inserted.</param>
 /// <param name="index"> inserting position.</param>
-template <typename T>
-void Vector<T>::Insert(const T& value, size_t index) {
+template <typename T> void Vector<T>::Insert(const T &value, size_t index) {
   if (index > size) {
     throw std::runtime_error(errors::kIndexOutOfRange);
   }
@@ -178,10 +507,7 @@ void Vector<T>::Insert(const T& value, size_t index) {
 /// decrementing the size.
 /// </summary>
 /// <returns> last element of the vector.</returns>
-template <typename T>
-T& Vector<T>::Pop() {
-  return data[size--];
-}
+template <typename T> T Vector<T>::Pop() { return data[size--]; }
 
 /// <summary>
 /// Returns the element at a given index. If the index is out of range, an
@@ -189,8 +515,7 @@ T& Vector<T>::Pop() {
 /// </summary>
 /// <param name="index"> index of element to return.</param>
 /// <returns> element at a given index.</returns>
-template <typename T>
-T& Vector<T>::At(size_t index) {
+template <typename T> T &Vector<T>::At(size_t index) {
   if (index >= size) {
     throw std::runtime_error(errors::kIndexOutOfRange);
   }
@@ -203,8 +528,7 @@ T& Vector<T>::At(size_t index) {
 /// </summary>
 /// <param name="index"> index of element to return.</param>
 /// <returns> element at a given index.</returns>
-template <typename T>
-const T& Vector<T>::At(size_t index) const {
+template <typename T> const T &Vector<T>::At(size_t index) const {
   if (index >= size) {
     throw std::runtime_error(errors::kIndexOutOfRange);
   }
@@ -215,17 +539,13 @@ const T& Vector<T>::At(size_t index) const {
 /// Return amount of elements in the vector.
 /// </summary>
 /// <returns> amount of elements in the vector.</returns>
-template <typename T>
-size_t Vector<T>::Size() const noexcept {
-  return size;
-}
+template <typename T> size_t Vector<T>::Size() const noexcept { return size; }
 
 /// <summary>
 /// Returns current maximum capacity of the vector.
 /// </summary>
 /// <returns> current maximum capacity of the vector.</returns>
-template <typename T>
-size_t Vector<T>::Capacity() const noexcept {
+template <typename T> size_t Vector<T>::Capacity() const noexcept {
   return capacity;
 }
 
@@ -235,63 +555,44 @@ size_t Vector<T>::Capacity() const noexcept {
 /// size, the vector is extended.
 /// </summary>
 /// <param name="size"> new size.</param>
-template <typename T>
-void Vector<T>::Resize(size_t size) {
-  Reallocate(size);
-}
+template <typename T> void Vector<T>::Resize(size_t size) { Reallocate(size); }
 
 /// <summary>
-/// Shrinks the capacity of the vector to the current size by 
+/// Shrinks the capacity of the vector to the current size by
 /// reallocating memory with the size of the vector.
 /// </summary>
-template <typename T>
-void Vector<T>::ShrinkToFit() {
-  Reallocate(size);
-}
+template <typename T> void Vector<T>::ShrinkToFit() { Reallocate(size); }
 
 /// <summary>
 /// Returns the first element of the vector.
 /// </summary>
 /// <returns> first element of the vector.</returns>
-template <typename T>
-T& Vector<T>::Front() {
-  return data[0];
-}
+template <typename T> T &Vector<T>::Front() { return data[0]; }
 
 /// <summary>
 /// Returns the first element of the vector.
 /// </summary>
 /// <returns> first element of the vector.</returns>
-template <typename T>
-const T& Vector<T>::Front() const {
-  return data[0];
-}
+template <typename T> const T &Vector<T>::Front() const { return data[0]; }
 
 /// <summary>
 /// Returns the last element of the vector.
 /// </summary>
 /// <returns> last element of the vector.</returns>
-template <typename T>
-T& Vector<T>::Back() {
-  return data[size - 1];
-}
+template <typename T> T &Vector<T>::Back() { return data[size - 1]; }
 
 /// <summary>
 /// Returns the last element of the vector.
 /// </summary>
 /// <returns> last element of the vector.</returns>
-template <typename T>
-const T& Vector<T>::Back() const {
+template <typename T> const T &Vector<T>::Back() const {
   return data[size - 1];
 }
 
 /// <summary>
 /// Deletes the vector and deallocates memory.
 /// </summary>
-template <typename T>
-Vector<T>::~Vector() noexcept {
-  delete[] data;
-}
+template <typename T> Vector<T>::~Vector() noexcept { delete[] data; }
 
 /// <summary>
 /// Reallocates memory for the vector. It copies all the elements from the old
@@ -299,9 +600,8 @@ Vector<T>::~Vector() noexcept {
 /// size, the size is truncated.
 /// </summary>
 /// <param name="amount"> new amount of elements.</param>
-template <typename T>
-void Vector<T>::Reallocate(size_t amount) {
-  T* new_data{new T[amount]};
+template <typename T> void Vector<T>::Reallocate(size_t amount) {
+  T *new_data{new T[amount]};
   size = (amount < size) ? amount : size;
   for (size_t i{}; i < size; ++i) {
     new_data[i] = data[i];
@@ -310,6 +610,117 @@ void Vector<T>::Reallocate(size_t amount) {
   data = new_data;
   capacity = amount;
 }
-}  // namespace alglib
 
-#endif  // ALGLIB_INCLUDE_VECTOR_H_
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::Iterator Vector<T>::begin() {
+  return Vector<T>::Iterator(data);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::Iterator Vector<T>::end() {
+  return Vector<T>::Iterator(data + size - 1);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ConstIterator Vector<T>::cbegin() {
+  return Vector<T>::ConstIterator(data);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ConstIterator Vector<T>::cend() {
+  return Vector<T>::ConstIterator(data + size);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ReverseIterator Vector<T>::rbegin() {
+  return Vector<T>::ReverseIterator(data + size - 1);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ReverseIterator Vector<T>::rend() {
+  return Vector<T>::ReverseIterator(data - 1);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ConstReverseIterator Vector<T>::crbegin() {
+  return Vector<T>::ConstReverseIterator(data + size - 1);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ConstReverseIterator Vector<T>::crend() {
+  return Vector<T>::ConstReverseIterator(data - 1);
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::Iterator Vector<T>::Begin() { return begin(); }
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::Iterator Vector<T>::End() { return end(); }
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::ConstIterator Vector<T>::ConstBegin() {
+  return cbegin();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::ConstIterator Vector<T>::ConstEnd() {
+  return cend();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::ReverseIterator Vector<T>::ReverseBegin() {
+  return rbegin();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::ReverseIterator Vector<T>::ReverseEnd() {
+  return rend();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T>
+Vector<T>::ConstReverseIterator Vector<T>::ConstReverseBegin() {
+  return crbegin();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T>
+Vector<T>::ConstReverseIterator Vector<T>::ConstReverseEnd() {
+  return crend();
+}
+
+} // namespace alglib
+
+#endif // ALGLIB_INCLUDE_VECTOR_H_
