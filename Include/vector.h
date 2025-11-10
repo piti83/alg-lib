@@ -32,8 +32,12 @@
 // capacity.
 //*****************************************************************************
 
+// TODO: Update Iterator docs!
+
 #ifndef ALGLIB_INCLUDE_VECTOR_H_
 #define ALGLIB_INCLUDE_VECTOR_H_
+
+#include <stdexcept>
 
 #include "constants.h"
 
@@ -42,18 +46,11 @@
 /// </summary>
 namespace alglib {
 
-template <typename VectorType> class VectorIter {
-public:
-  // TODO: add definitions for operators and constructors.
-  VectorType &operator*();
-  VectorType &operator++();
-  VectorType operator++(VectorType);
-  bool operator!=(const VectorIter &);
-  bool operator==(const VectorIter &);
-
-private:
-  VectorType *_ptr;
-};
+// Declarations for Vector class. Implementations under vector class.
+template <typename VectorType> class VectorIter;
+template <typename VectorType> class ConstVectorIter;
+template <typename VectorType> class ReverseVectorIter;
+template <typename VectorType> class ConstReverseVectorIter;
 
 /// <summary>
 /// Template based vector implementation that uses an array as a base structure.
@@ -63,6 +60,19 @@ private:
 /// <typeparam name="T"> type of data stored in vector.</typeparam>
 template <typename T> class Vector {
 public:
+  using Iterator = VectorIter<T>;
+  using IteratorRef = VectorIter<T> &;
+
+  using ConstIterator = ConstVectorIter<T>;
+  using ConstIteratorRef = ConstVectorIter<T> &;
+
+  using ReverseIterator = ReverseVectorIter<T>;
+  using ReverseIteratorRef = ReverseVectorIter<T> &;
+
+  using ConstReverseIterator = ConstReverseVectorIter<T>;
+  using ConstReverseIteratorRef = ConstReverseVectorIter<T>&;
+
+public:
   // Constructors for vector class;
   Vector() noexcept;
   Vector(size_t elements) noexcept;
@@ -71,7 +81,7 @@ public:
   // Inserting and removing elements from the vector.
   void Push(const T &value) noexcept;
   void Insert(const T &value, size_t index);
-  T &Pop();
+  T Pop();
 
   // Accessing elements in the vector.
   T &At(size_t index);
@@ -91,7 +101,20 @@ public:
   T &Back();
   const T &Back() const;
 
-  // Destructor for the vector class.
+  // Iterators
+  Iterator begin();
+  Iterator end();
+  ConstIterator cbegin();
+  ConstIterator cend();
+  ReverseIterator rbegin();
+  ReverseIterator rend();
+  Iterator Begin();
+  Iterator End();
+  ConstIterator ConstBegin();
+  ConstIterator ConstEnd();
+  ReverseIterator ReverseBegin();
+  ReverseIterator ReverseEnd();
+
   ~Vector() noexcept;
 
 private:
@@ -113,8 +136,290 @@ private:
   T *data;
 };
 
+/// <summary>
+/// Iterator for alg-lib's vector. Makes it possible to use for-each style loop.
+/// </summary>
+/// <typeparam name="T"> type of data stored in vector.</typeparam>
+template <typename VectorType> class VectorIter {
+public:
+  VectorIter(VectorType *element_address);
+
+  // Operator overloads
+  VectorType &operator*();
+  VectorIter &operator++();
+  VectorIter operator++(VectorType placeholder);
+  bool operator!=(const VectorIter &other);
+  bool operator==(const VectorIter &other);
+
+private:
+  /// <summary>
+  /// Pointer to a specific element of vector
+  /// </summary>
+  VectorType *_ptr;
+};
+
+/// <summary>
+/// Iterator for alg-lib's vector. Returns constants to disable possibility of
+/// modifying vector contents through it.
+/// </summary>
+/// <typeparam name="T"> type of data stored in vector.</typeparam>
+template <typename VectorType> class ConstVectorIter {
+public:
+  ConstVectorIter(VectorType *element_address);
+
+  // Operator overloads
+  VectorType &operator*() const;
+  ConstVectorIter &operator++();
+  ConstVectorIter operator++(VectorType placeholder);
+  bool operator!=(const ConstVectorIter &other) const;
+  bool operator==(const ConstVectorIter &other) const;
+
+private:
+  /// <summary>
+  /// Pointer to a specific element of vector
+  /// </summary>
+  const VectorType *_ptr;
+};
+
+template <typename VectorType> class ReverseVectorIter {
+public:
+  ReverseVectorIter(VectorType *element_address);
+
+  // Operator overloads
+  VectorType &operator*();
+  ReverseVectorIter &operator++();
+  ReverseVectorIter operator++(VectorType placeholder);
+  bool operator!=(const ReverseVectorIter &other);
+  bool operator==(const ReverseVectorIter &other);
+
+private:
+  /// <summary>
+  /// Pointer to a specific element of vector
+  /// </summary>
+  VectorType *_ptr;
+};
+
+template <typename VectorType> class ConstReverseVectorIter {
+public:
+  ConstReverseVectorIter(VectorType *element_address);
+
+  // Operator overloads
+  VectorType &operator*() const;
+  ConstReverseVectorIter &operator++();
+  ConstReverseVectorIter operator++(VectorType placeholder);
+  bool operator!=(const ConstReverseVectorIter &other) const;
+  bool operator==(const ConstReverseVectorIter &other) const;
+
+private:
+  /// <summary>
+  /// Pointer to a specific element of vector
+  /// </summary>
+  const VectorType *_ptr;
+};
+
+/// <summary>
+/// Constructor initialising the that iterator points to to argument value;
+/// </summary>
+template <typename VectorType>
+VectorIter<VectorType>::VectorIter(VectorType *element_address) {
+  _ptr = element_address;
+}
+
+/// <summary>
+/// Dereferences held pointer to get the value of vector element.
+/// </summary>
 template <typename VectorType> VectorType &VectorIter<VectorType>::operator*() {
   return *_ptr;
+}
+
+/// <summary>
+/// Pre-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+VectorIter<VectorType> &VectorIter<VectorType>::operator++() {
+  ++_ptr;
+  return *this;
+}
+
+/// <summary>
+/// Post-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+VectorIter<VectorType>
+VectorIter<VectorType>::operator++(VectorType placeholder) {
+  VectorIter<VectorType> tmp = this;
+  ++this->_ptr;
+  return tmp;
+}
+
+/// <summary>
+/// Checks inequality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool VectorIter<VectorType>::operator!=(const VectorIter &other) {
+  return this->_ptr != other._ptr;
+}
+
+/// <summary>
+/// Checks equality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool VectorIter<VectorType>::operator==(const VectorIter &other) {
+  return this->_ptr == other._ptr;
+}
+
+/// <summary>
+/// Constructor initialising the that iterator points to to argument value;
+/// </summary>
+template <typename VectorType>
+ConstVectorIter<VectorType>::ConstVectorIter(VectorType *element_address) {
+  _ptr = element_address;
+}
+
+/// <summary>
+/// Dereferences held pointer to get the value of vector element.
+/// </summary>
+template <typename VectorType>
+VectorType &ConstVectorIter<VectorType>::operator*() const {
+  return *_ptr;
+}
+
+/// <summary>
+/// Pre-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ConstVectorIter<VectorType> &ConstVectorIter<VectorType>::operator++() {
+  ++_ptr;
+  return *this;
+}
+
+/// <summary>
+/// Post-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ConstVectorIter<VectorType>
+ConstVectorIter<VectorType>::operator++(VectorType placeholder) {
+  VectorIter<VectorType> tmp = this;
+  ++this->_ptr;
+  return tmp;
+}
+
+/// <summary>
+/// Checks inequality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ConstVectorIter<VectorType>::operator!=(const ConstVectorIter &other) const {
+  return this->_ptr != other._ptr;
+}
+
+/// <summary>
+/// Checks equality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ConstVectorIter<VectorType>::operator==(const ConstVectorIter &other) const {
+  return this->_ptr == other._ptr;
+}
+
+/// <summary>
+/// Constructor initialising the that iterator points to to argument value;
+/// </summary>
+template <typename VectorType>
+ReverseVectorIter<VectorType>::ReverseVectorIter(VectorType *element_address) {
+  _ptr = element_address;
+}
+
+/// <summary>
+/// Dereferences held pointer to get the value of vector element.
+/// </summary>
+template <typename VectorType> VectorType &ReverseVectorIter<VectorType>::operator*() {
+  return *_ptr;
+}
+
+/// <summary>
+/// Pre-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ReverseVectorIter<VectorType> &ReverseVectorIter<VectorType>::operator++() {
+  --_ptr;
+  return *this;
+}
+
+/// <summary>
+/// Post-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ReverseVectorIter<VectorType>
+ReverseVectorIter<VectorType>::operator++(VectorType placeholder) {
+  ReverseVectorIter<VectorType> tmp = this;
+  --this->_ptr;
+  return tmp;
+}
+
+/// <summary>
+/// Checks inequality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ReverseVectorIter<VectorType>::operator!=(const ReverseVectorIter &other) {
+  return this->_ptr != other._ptr;
+}
+
+/// <summary>
+/// Checks equality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ReverseVectorIter<VectorType>::operator==(const ReverseVectorIter &other) {
+  return this->_ptr == other._ptr;
+}
+
+/// <summary>
+/// Constructor initialising the that iterator points to to argument value;
+/// </summary>
+template <typename VectorType>
+ConstReverseVectorIter<VectorType>::ConstReverseVectorIter(VectorType *element_address) {
+  _ptr = element_address;
+}
+
+/// <summary>
+/// Dereferences held pointer to get the value of vector element.
+/// </summary>
+template <typename VectorType> VectorType &ConstReverseVectorIter<VectorType>::operator*() const {
+  return *_ptr;
+}
+
+/// <summary>
+/// Pre-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ConstReverseVectorIter<VectorType> &ConstReverseVectorIter<VectorType>::operator++() {
+  --_ptr;
+  return *this;
+}
+
+/// <summary>
+/// Post-increment. Makes the iterator point to the next element in vector.
+/// </summary>
+template <typename VectorType>
+ConstReverseVectorIter<VectorType>
+ConstReverseVectorIter<VectorType>::operator++(VectorType placeholder) {
+  ConstReverseVectorIter<VectorType> tmp = this;
+  --this->_ptr;
+  return tmp;
+}
+
+/// <summary>
+/// Checks inequality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ConstReverseVectorIter<VectorType>::operator!=(const ConstReverseVectorIter &other) const {
+  return this->_ptr != other._ptr;
+}
+
+/// <summary>
+/// Checks equality of two iterators.
+/// </summary>
+template <typename VectorType>
+bool ConstReverseVectorIter<VectorType>::operator==(const ConstReverseVectorIter &other) const {
+  return this->_ptr == other._ptr;
 }
 
 /// <summary>
@@ -192,7 +497,7 @@ template <typename T> void Vector<T>::Insert(const T &value, size_t index) {
 /// decrementing the size.
 /// </summary>
 /// <returns> last element of the vector.</returns>
-template <typename T> T &Vector<T>::Pop() { return data[size--]; }
+template <typename T> T Vector<T>::Pop() { return data[size--]; }
 
 /// <summary>
 /// Returns the element at a given index. If the index is out of range, an
