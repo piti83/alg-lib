@@ -32,8 +32,6 @@
 // capacity.
 //*****************************************************************************
 
-// TODO: Update Iterator docs!
-
 #ifndef ALGLIB_INCLUDE_VECTOR_H_
 #define ALGLIB_INCLUDE_VECTOR_H_
 
@@ -70,7 +68,7 @@ public:
   using ReverseIteratorRef = ReverseVectorIter<T> &;
 
   using ConstReverseIterator = ConstReverseVectorIter<T>;
-  using ConstReverseIteratorRef = ConstReverseVectorIter<T>&;
+  using ConstReverseIteratorRef = ConstReverseVectorIter<T> &;
 
 public:
   // Constructors for vector class;
@@ -108,12 +106,16 @@ public:
   ConstIterator cend();
   ReverseIterator rbegin();
   ReverseIterator rend();
+  ConstReverseIterator crbegin();
+  ConstReverseIterator crend();
   Iterator Begin();
   Iterator End();
   ConstIterator ConstBegin();
   ConstIterator ConstEnd();
   ReverseIterator ReverseBegin();
   ReverseIterator ReverseEnd();
+  ConstReverseIterator ConstReverseBegin();
+  ConstReverseIterator ConstReverseEnd();
 
   ~Vector() noexcept;
 
@@ -168,7 +170,7 @@ public:
   ConstVectorIter(VectorType *element_address);
 
   // Operator overloads
-  VectorType &operator*() const;
+  const VectorType &operator*() const;
   ConstVectorIter &operator++();
   ConstVectorIter operator++(VectorType placeholder);
   bool operator!=(const ConstVectorIter &other) const;
@@ -204,7 +206,7 @@ public:
   ConstReverseVectorIter(VectorType *element_address);
 
   // Operator overloads
-  VectorType &operator*() const;
+  const VectorType &operator*() const;
   ConstReverseVectorIter &operator++();
   ConstReverseVectorIter operator++(VectorType placeholder);
   bool operator!=(const ConstReverseVectorIter &other) const;
@@ -247,8 +249,8 @@ VectorIter<VectorType> &VectorIter<VectorType>::operator++() {
 template <typename VectorType>
 VectorIter<VectorType>
 VectorIter<VectorType>::operator++(VectorType placeholder) {
-  VectorIter<VectorType> tmp = this;
-  ++this->_ptr;
+  VectorIter<VectorType> tmp = *this;
+  ++(this->_ptr);
   return tmp;
 }
 
@@ -280,7 +282,7 @@ ConstVectorIter<VectorType>::ConstVectorIter(VectorType *element_address) {
 /// Dereferences held pointer to get the value of vector element.
 /// </summary>
 template <typename VectorType>
-VectorType &ConstVectorIter<VectorType>::operator*() const {
+const VectorType &ConstVectorIter<VectorType>::operator*() const {
   return *_ptr;
 }
 
@@ -299,8 +301,8 @@ ConstVectorIter<VectorType> &ConstVectorIter<VectorType>::operator++() {
 template <typename VectorType>
 ConstVectorIter<VectorType>
 ConstVectorIter<VectorType>::operator++(VectorType placeholder) {
-  VectorIter<VectorType> tmp = this;
-  ++this->_ptr;
+  ConstVectorIter<VectorType> tmp = *this;
+  ++(this->_ptr);
   return tmp;
 }
 
@@ -308,7 +310,8 @@ ConstVectorIter<VectorType>::operator++(VectorType placeholder) {
 /// Checks inequality of two iterators.
 /// </summary>
 template <typename VectorType>
-bool ConstVectorIter<VectorType>::operator!=(const ConstVectorIter &other) const {
+bool ConstVectorIter<VectorType>::operator!=(
+    const ConstVectorIter &other) const {
   return this->_ptr != other._ptr;
 }
 
@@ -316,7 +319,8 @@ bool ConstVectorIter<VectorType>::operator!=(const ConstVectorIter &other) const
 /// Checks equality of two iterators.
 /// </summary>
 template <typename VectorType>
-bool ConstVectorIter<VectorType>::operator==(const ConstVectorIter &other) const {
+bool ConstVectorIter<VectorType>::operator==(
+    const ConstVectorIter &other) const {
   return this->_ptr == other._ptr;
 }
 
@@ -331,7 +335,8 @@ ReverseVectorIter<VectorType>::ReverseVectorIter(VectorType *element_address) {
 /// <summary>
 /// Dereferences held pointer to get the value of vector element.
 /// </summary>
-template <typename VectorType> VectorType &ReverseVectorIter<VectorType>::operator*() {
+template <typename VectorType>
+VectorType &ReverseVectorIter<VectorType>::operator*() {
   return *_ptr;
 }
 
@@ -350,8 +355,8 @@ ReverseVectorIter<VectorType> &ReverseVectorIter<VectorType>::operator++() {
 template <typename VectorType>
 ReverseVectorIter<VectorType>
 ReverseVectorIter<VectorType>::operator++(VectorType placeholder) {
-  ReverseVectorIter<VectorType> tmp = this;
-  --this->_ptr;
+  ReverseVectorIter<VectorType> tmp = *this;
+  --(this->_ptr);
   return tmp;
 }
 
@@ -375,14 +380,16 @@ bool ReverseVectorIter<VectorType>::operator==(const ReverseVectorIter &other) {
 /// Constructor initialising the that iterator points to to argument value;
 /// </summary>
 template <typename VectorType>
-ConstReverseVectorIter<VectorType>::ConstReverseVectorIter(VectorType *element_address) {
+ConstReverseVectorIter<VectorType>::ConstReverseVectorIter(
+    VectorType *element_address) {
   _ptr = element_address;
 }
 
 /// <summary>
 /// Dereferences held pointer to get the value of vector element.
 /// </summary>
-template <typename VectorType> VectorType &ConstReverseVectorIter<VectorType>::operator*() const {
+template <typename VectorType>
+const VectorType &ConstReverseVectorIter<VectorType>::operator*() const {
   return *_ptr;
 }
 
@@ -390,7 +397,8 @@ template <typename VectorType> VectorType &ConstReverseVectorIter<VectorType>::o
 /// Pre-increment. Makes the iterator point to the next element in vector.
 /// </summary>
 template <typename VectorType>
-ConstReverseVectorIter<VectorType> &ConstReverseVectorIter<VectorType>::operator++() {
+ConstReverseVectorIter<VectorType> &
+ConstReverseVectorIter<VectorType>::operator++() {
   --_ptr;
   return *this;
 }
@@ -401,8 +409,8 @@ ConstReverseVectorIter<VectorType> &ConstReverseVectorIter<VectorType>::operator
 template <typename VectorType>
 ConstReverseVectorIter<VectorType>
 ConstReverseVectorIter<VectorType>::operator++(VectorType placeholder) {
-  ConstReverseVectorIter<VectorType> tmp = this;
-  --this->_ptr;
+  ConstReverseVectorIter<VectorType> tmp = *this;
+  --(this->_ptr);
   return tmp;
 }
 
@@ -410,7 +418,8 @@ ConstReverseVectorIter<VectorType>::operator++(VectorType placeholder) {
 /// Checks inequality of two iterators.
 /// </summary>
 template <typename VectorType>
-bool ConstReverseVectorIter<VectorType>::operator!=(const ConstReverseVectorIter &other) const {
+bool ConstReverseVectorIter<VectorType>::operator!=(
+    const ConstReverseVectorIter &other) const {
   return this->_ptr != other._ptr;
 }
 
@@ -418,7 +427,8 @@ bool ConstReverseVectorIter<VectorType>::operator!=(const ConstReverseVectorIter
 /// Checks equality of two iterators.
 /// </summary>
 template <typename VectorType>
-bool ConstReverseVectorIter<VectorType>::operator==(const ConstReverseVectorIter &other) const {
+bool ConstReverseVectorIter<VectorType>::operator==(
+    const ConstReverseVectorIter &other) const {
   return this->_ptr == other._ptr;
 }
 
@@ -600,6 +610,117 @@ template <typename T> void Vector<T>::Reallocate(size_t amount) {
   data = new_data;
   capacity = amount;
 }
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::Iterator Vector<T>::begin() {
+  return Vector<T>::Iterator(data);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::Iterator Vector<T>::end() {
+  return Vector<T>::Iterator(data + size - 1);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ConstIterator Vector<T>::cbegin() {
+  return Vector<T>::ConstIterator(data);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ConstIterator Vector<T>::cend() {
+  return Vector<T>::ConstIterator(data + size);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ReverseIterator Vector<T>::rbegin() {
+  return Vector<T>::ReverseIterator(data + size - 1);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ReverseIterator Vector<T>::rend() {
+  return Vector<T>::ReverseIterator(data - 1);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ConstReverseIterator Vector<T>::crbegin() {
+  return Vector<T>::ConstReverseIterator(data + size - 1);
+}
+
+/// <summary>
+/// Standard compliant function returning iterator object
+/// </summary>
+template <typename T> Vector<T>::ConstReverseIterator Vector<T>::crend() {
+  return Vector<T>::ConstReverseIterator(data - 1);
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::Iterator Vector<T>::Begin() { return begin(); }
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::Iterator Vector<T>::End() { return end(); }
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::ConstIterator Vector<T>::ConstBegin() {
+  return cbegin();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::ConstIterator Vector<T>::ConstEnd() {
+  return cend();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::ReverseIterator Vector<T>::ReverseBegin() {
+  return rbegin();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T> Vector<T>::ReverseIterator Vector<T>::ReverseEnd() {
+  return rend();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T>
+Vector<T>::ConstReverseIterator Vector<T>::ConstReverseBegin() {
+  return crbegin();
+}
+
+/// <summary>
+/// Wrapper around standard compliant function name
+/// </summary>
+template <typename T>
+Vector<T>::ConstReverseIterator Vector<T>::ConstReverseEnd() {
+  return crend();
+}
+
 } // namespace alglib
 
 #endif // ALGLIB_INCLUDE_VECTOR_H_
