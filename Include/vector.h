@@ -35,6 +35,7 @@
 #ifndef ALGLIB_INCLUDE_VECTOR_H_
 #define ALGLIB_INCLUDE_VECTOR_H_
 
+#include <initializer_list>
 #include <stdexcept>
 
 #include "constants.h"
@@ -71,10 +72,14 @@ public:
   using ConstReverseIteratorRef = ConstReverseVectorIter<T> &;
 
 public:
-  // Constructors for vector class;
+  // Constructors for vector class
   Vector() noexcept;
   Vector(size_t elements) noexcept;
   Vector(size_t elements, const T &value) noexcept;
+
+  // Support for initializer list
+  Vector(std::initializer_list<T> list);
+  Vector &operator=(std::initializer_list<T> list);
 
   // Inserting and removing elements from the vector.
   void Push(const T &value) noexcept;
@@ -467,6 +472,41 @@ Vector<T>::Vector(size_t elements, const T &value) noexcept
   for (size_t i{}; i < capacity; ++i) {
     data[i] = value;
   }
+}
+
+/// <summary>
+/// Enables brace-type initialization for Vector class
+/// </summary>
+template <typename T>
+Vector<T>::Vector(std::initializer_list<T> list)
+    : size(0), capacity(0), data(nullptr) {
+  capacity = list.size();
+  data = new T[capacity];
+
+  for (const T &element : list) {
+    data[size++] = element;
+  }
+}
+
+/// <summary>
+/// Assignes Vector to given initializer list.
+/// </summary>
+/// <param name="list"> initializer list with values to be set as
+/// Vector.</param>
+template <typename T>
+Vector<T> &Vector<T>::operator=(std::initializer_list<T> list) {
+  if (list.size() > capacity) {
+    delete[] data;
+    capacity = list.size();
+    data = new T[capacity];
+  }
+
+  size = 0;
+  for (const T &element : list) {
+    data[size++] = element;
+  }
+
+  return *this;
 }
 
 /// <summary>

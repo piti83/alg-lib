@@ -89,13 +89,13 @@ TEST(VectorTest, ComplexTypeSupport) {
 
 TEST(VectorTest, ValueInitialization) {
   alglib::Vector<int> vec(3, 100);
-  vec.Push(200); 
+  vec.Push(200);
   EXPECT_EQ(vec.At(0), 200);
 }
 
 TEST(VectorTest, InitializationSafety) {
-  alglib::Vector<int> vec;  
-  vec.Push(10);             
+  alglib::Vector<int> vec;
+  vec.Push(10);
   EXPECT_EQ(vec.At(0), 10);
 }
 
@@ -104,7 +104,7 @@ TEST(VectorTest, InsertAtBeginning) {
   vec.Push(2);
   vec.Push(3);
 
-  vec.Insert(1, 0); 
+  vec.Insert(1, 0);
   EXPECT_EQ(vec.Size(), 3);
   EXPECT_EQ(vec.At(0), 1);
   EXPECT_EQ(vec.At(1), 2);
@@ -126,7 +126,7 @@ TEST(VectorTest, InsertInMiddle) {
   vec.Push(1);
   vec.Push(3);
 
-  vec.Insert(2, 1); 
+  vec.Insert(2, 1);
   EXPECT_EQ(vec.At(1), 2);
   EXPECT_EQ(vec.At(2), 3);
 }
@@ -137,7 +137,7 @@ TEST(VectorTest, InsertWithReallocation) {
   vec.Push(2);
   const size_t initial_cap = vec.Capacity();
 
-  vec.Insert(3, 2); 
+  vec.Insert(3, 2);
   EXPECT_EQ(vec.Capacity(), initial_cap);
   EXPECT_EQ(vec.At(2), 3);
 }
@@ -146,8 +146,8 @@ TEST(VectorTest, InsertInvalidIndex) {
   alglib::Vector<int> vec;
   vec.Push(1);
 
-  EXPECT_THROW(vec.Insert(2, 5), std::runtime_error); 
-  EXPECT_THROW(vec.Insert(2, -1), std::runtime_error);  
+  EXPECT_THROW(vec.Insert(2, 5), std::runtime_error);
+  EXPECT_THROW(vec.Insert(2, -1), std::runtime_error);
 }
 
 TEST(VectorTest, InsertIntoEmptyVector) {
@@ -155,4 +155,18 @@ TEST(VectorTest, InsertIntoEmptyVector) {
   vec.Insert(1, 0);
   EXPECT_EQ(vec.Size(), 1);
   EXPECT_EQ(vec.At(0), 1);
+}
+
+TEST(VectorTest, InitializerListConstruct) {
+  alglib::Vector<int> v = {2, 5, 12, 3};
+  EXPECT_EQ(v.At(1), 5);
+
+  alglib::Vector<int> v2{1, 12, 24, 48};
+  EXPECT_EQ(v2.At(2), 24);
+}
+
+TEST(VectorTest, INitializerListAssignment) {
+  alglib::Vector<int> v;
+  v = {1, 4, 12};
+  EXPECT_EQ(v.At(1), 4);
 }
